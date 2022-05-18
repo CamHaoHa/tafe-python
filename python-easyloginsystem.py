@@ -35,9 +35,9 @@ def loginUser():
                 if userPass == foundPass:
                     print ("LOGGED IN, welcome back " + userName)
                     main()
-                else:
-                    print ("WRONG, please try again")
-                    loginUser()
+            else:
+                print ("WRONG, please try again")
+                loginUser()
 
 
 def registerUser():
@@ -58,17 +58,26 @@ def registerUser():
                 if option in ["1", "2"]:
                      break
             if option == "1":
-                generatePass()
+                userPass = generatePass()
+                print("your new password is "+ userPass)
                 print("Register done. Please-log-in-to-check")
             else:
-                validPass()  
+                userPass = validPass()
+                print("Register done. Please-log-in-to-check")
         f.close()
+        with open(file,"a") as f:
+            f.write(userName)
+            f.write(" ")
+            f.write(userPass)
+            f.write("\n")
+            f.close()
         main()
+
 
 
 def generatePass():
     randomString = string.ascii_letters + string.punctuation + string.digits
-    randomPass = ' '.join(secrets.choice(randomString) for i in range (10))
+    randomPass = ''.join(secrets.choice(randomString) for i in range (10))
     return randomPass
 
 
@@ -87,7 +96,6 @@ def validPass():
                 print("please try again")
                 validPass()
             else:
-                print("Register done. Please log-in")
-
+                return userPass;
 
 main()
