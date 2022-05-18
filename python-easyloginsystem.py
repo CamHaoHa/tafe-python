@@ -2,8 +2,9 @@ from random import random
 import secrets
 import string
 import re
+import time
 file = "accounts.txt"
-root = [" ", "root" , "ROOT"]
+root = [" ", "root" , "ROOT", "admin","ADMIN"]
 def main():
     print("MAIN MENU")
     print("---------")
@@ -25,18 +26,32 @@ def loginUser():
     print("---------")
     userName = str(input("UserName: "))
     userPass = str(input("Password: "))
-    with open(file,"r") as f:
-        for row in f.readlines():
-            row = row.split()
-            f.close()
-            if userName in row:
+    validation(userName, userPass)
+    
+def validation(userName, userPass):
+    with open(file,"r") as f: 
+        with open(file,"r") as f:
+            for row in f.readlines():
+             row = row.split()
+             f.close()
+             if userName in row:
                 index = row.index(userName)+1
                 foundPass = row[index]
-                if userPass == foundPass:
+                if userPass == foundPass and userName not in root:
                     print ("LOGGED IN, welcome back " + userName)
+                    sleep(2)
                     main()
+                elif userName in root and userPass == foundPass:
+                    print("HI ADMIN, HERE IS THE LIST OF ACCOUNTS")
+                    viewAccount()
+                    print("Good-bye")
+                    sleep(3)
+                    main()
+                else:
+                    print ("Wrong user or password, please try again")
+                    loginUser()
             else:
-                print ("WRONG, please try again")
+                print ("Wrong user or wrong password, please try again") 
                 loginUser()
 
 
@@ -74,7 +89,6 @@ def registerUser():
         main()
 
 
-
 def generatePass():
     randomString = string.ascii_letters + string.punctuation + string.digits
     randomPass = ''.join(secrets.choice(randomString) for i in range (10))
@@ -97,5 +111,13 @@ def validPass():
                 validPass()
             else:
                 return userPass;
+
+def sleep(int):
+    time.sleep(int)
+
+def viewAccount():
+    with open(file) as f:
+        for line in f:
+            print(line.strip())
 
 main()
